@@ -75,8 +75,8 @@ fi
 echo '[INSTALL] Installing Requirements'
 pip install --no-cache-dir -r requirements.txt
 
-echo '[INSTALL] Clean Up'
-bash scripts/clean.sh y
+#echo '[INSTALL] Clean Up'
+#bash scripts/clean.sh y
 
 echo '[INSTALL] Migrating Database'
 python manage.py makemigrations
