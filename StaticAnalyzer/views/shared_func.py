@@ -313,20 +313,25 @@ def score(findings):
     cvss_scores = []
     avg_cvss = 0
     app_score = 100
-    for finding in findings.values():
-        find = finding.get('metadata')
-        if not find:
-            # Hack to support iOS Binary Scan Results
-            find = finding
-        if find.get('cvss'):
-            if find['cvss'] != 0:
-                cvss_scores.append(find['cvss'])
-        if find['severity'] == 'high':
-            app_score = app_score - 15
-        elif find['severity'] == 'warning':
-            app_score = app_score - 10
-        elif find['severity'] == 'good':
-            app_score = app_score + 5
+    for _, finding in findings.items():
+        if 'cvss' in finding:
+            if finding['cvss'] != 0:
+                cvss_scores.append(finding['cvss'])
+        if 'level' in finding.keys():
+            if finding['level'] == Level.high.value:
+                app_score = app_score - 15
+            elif finding['level'] == Level.warning.value:
+                app_score = app_score - 10
+            elif finding['level'] == Level.good.value:
+                app_score = app_score + 5
+        elif 'severity' in finding.keys():
+            if find['severity'] == 'high':
+                app_score = app_score - 15
+            elif find['severity'] == 'warning':
+                app_score = app_score - 10
+            elif find['severity'] == 'good':
+                app_score = app_score + 5
+     
     if cvss_scores:
         avg_cvss = round(sum(cvss_scores) / len(cvss_scores), 1)
     if app_score < 0:
